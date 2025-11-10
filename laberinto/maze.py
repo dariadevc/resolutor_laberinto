@@ -22,7 +22,8 @@ class Maze:
         self.grid[start_r][start_c] = '1'
         stack.append((start_r, start_c))
         
-        # (Ya no necesitamos guardar 'end_of_path')
+        # Guardaremos el final del camino aquí
+        self.end_of_path = (start_r, start_c)
 
         # Deltas para moverse 2 celdas (a los vecinos de las "celdas")
         dr = [-2, 2, 0, 0]
@@ -56,24 +57,26 @@ class Maze:
                 stack.append((nr, nc))
             
             else:
-                # 7. No hay vecinos, retroceder (backtrack)
-                # ¡AQUÍ ESTÁ EL CAMBIO!
-                # En lugar de 'break', usamos 'stack.pop()'.
-                # Esto permite al algoritmo crear bifurcaciones
-                # y explorar TODA la cuadrícula.
-                stack.pop()
+                # 7. No hay vecinos, estamos atascados.
+                # ¡ESTE ES EL CAMBIO CLAVE!
+                # En lugar de retroceder (stack.pop()), terminamos.
+                # Esto crea UN SOLO PASILLO aleatorio.
+                self.end_of_path = (r, c) # Guardar dónde terminamos
+                break # Salir del bucle 'while'
         
         # --- FIN: Generación Aleatoria ---
 
         # --- Crear la abertura de INICIO y FIN ---
         
-        # 8. Poner la SALIDA 'E' SIEMPRE en la esquina inferior derecha
-        self.grid[self.n - 2][self.n - 2] = 'E'
+        # 8. Poner la SALIDA 'E' al final de nuestro camino aleatorio
+        r_end, c_end = self.end_of_path
+        self.grid[r_end][c_end] = 'E'
         
         # 9. Poner el INICIO '1' en la esquina (0,0) (la abertura)
         self.grid[0][0] = '1'
         # Conectar la abertura al laberinto
-        self.grid[1][0] = '1' 
+        self.grid[1][0] = '1' # El "bichito" entrará por aquí
+        self.grid[1][1] = '1' # Conectar al inicio del pasillo (1,1)
 
         # El 'main.py' leerá esto para ajustar el tamaño de la ventana
         self.cell_size = 20 # Reducimos el tamaño para laberintos más grandes
