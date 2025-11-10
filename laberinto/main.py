@@ -220,8 +220,8 @@ for direction_key, path in bug_image_paths.items():
 loaded_tile_images = {}
 tile_image_paths = {
     '0': "pared.png",     # Paredes
-    '1': "callejon3.png",    # Pasillo
-    'V': "callejon3.png"   # Pasillo visitado
+    '1': "piso.png",    # Pasillo
+    'V': "piso.png"   # Pasillo visitado
     #'E': "callejon3.png",     # Salida
 }
 print("\nCargando sprites del nivel...")
