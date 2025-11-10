@@ -1,62 +1,286 @@
 import pygame
-from maze import Maze
+import random
+# Asegúrate de que 'maze.py' tenga la clase Maze que acepta 'static_grid'
+from maze import Maze 
 from turing_machine import TuringMachine
 
 # --- Configuración ---
-# ¡Prueba cambiar este número!
-# DEBE SER IMPAR para que el generador funcione bien (ej. 15, 25, 35).
-MAZE_SIZE = 15 
-FPS = 20 # Sube esto para que el "bichito" vaya más rápido
+
+# 1. Define o importa tus laberintos estáticos aquí
+# 7x7 - Laberinto 1 (Camino simple en S)
+maze_7x7_1 = [
+    ['0', '1', '0', '0', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '0', '0'],
+    ['0', '0', '0', '0', '1', '0', '0'],
+    ['0', '0', '0', '0', '1', '1', '0'],
+    ['0', '0', '0', '0', '0', '1', '0'],
+    ['0', '0', '0', '0', '0', 'E', '0']
+]
+
+# 7x7 - Laberinto 2 (Camino central)
+maze_7x7_2 = [
+    ['0', '0', '0', '1', '0', '0', '0'],
+    ['0', '0', '0', '1', '0', '0', '0'],
+    ['0', '0', '0', '1', '0', '0', '0'],
+    ['0', '1', '1', '1', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0'],
+    ['0', 'E', '0', '0', '0', '0', '0']
+]
+
+# 7x7 - Laberinto 3 (Camino largo)
+maze_7x7_3 = [
+    ['0', '0', '0', '0', '0', '1', '0'],
+    ['0', '1', '1', '1', '1', '1', '0'],
+    ['0', '1', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '0', '0', '0'],
+    ['0', '0', '0', '1', '0', '0', '0'],
+    ['0', '1', '1', '1', '0', '0', '0'],
+    ['0', 'E', '0', '0', '0', '0', '0']
+]
+
+# 9x9 - Laberinto 1
+maze_9x9_1 = [
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '0', '0'],
+    ['0', '0', '0', '0', '0', '0', '1', '0', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '0', '0'],
+    ['0', 'E', '0', '0', '0', '0', '0', '0', '0']
+]
+
+# 9x9 - Laberinto 2
+maze_9x9_2 = [
+    ['0', '0', '0', '0', '1', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '1', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '0', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', 'E', '0']
+]
+
+# 9x9 - Laberinto 3
+maze_9x9_3 = [
+    ['0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '1', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '1', '1', '1', '1', '0', '0'],
+    ['0', '0', '0', '0', '0', '0', '1', '0', '0'],
+    ['0', '0', '0', '0', '0', '0', 'E', '0', '0']
+]
+
+# 11x11 - Laberinto 1
+maze_11x11_1 = [
+    ['0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '1', '0', '0', '0', '0', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '1', '1', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '1', '1', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '0', '1', '1', '1', '1', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', 'E', '0', '0', '0']
+]
+
+# 11x11 - Laberinto 2
+maze_11x11_2 = [
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '1', '1', '1', '1', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0'],
+    ['0', '0', '1', '1', '1', '1', '1', '0', '0', '0', '0'],
+    ['0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '1', '1', '1', '1', '1', '1', '1', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', 'E', '0']
+]
+
+# 11x11 - Laberinto 3
+maze_11x11_3 = [
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '1', '1', '1', '1', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '1', '1', '1', '0', '0', '0', '0'],
+    ['0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0'],
+    ['0', '0', '1', '1', '1', '1', '1', '0', '0', '0', '0'],
+    ['0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0'],
+    ['0', '0', 'E', '0', '0', '0', '0', '0', '0', '0', '0']
+]
+
+maze_25x25_1 = [
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1','1','1','1','1','1','1','1','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','1','1','1','1','1','0','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','1','0','0','0'],
+    ['0', '0', '0', '0', '1', '1', '1', '1', '1', '1', '1','1','1','1','1','1','1','1','1','1','1','1','0','0','0'],
+    ['0', '0', '1', '1', '1', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '1', '1', '1', '1', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '1', '1', '1', '1', '1', '1','1','1','1','1','1','1','1','1','1','1','1','1','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','1','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','1','1','1','1','1','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','1','1','1','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','1','1','0','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','1','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','1','1','1','1','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','1','0','0','0','0','0','0'],
+    ['0', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1','1','1','1','1','1','1','1','1','0','0','0','0','0','0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '1', '1', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '1', '1', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+    ['0', '0', '0', '0', '0', '1', '1', '1', '1', '1', '1','1','1','1','1','1','1','1','1','1','1','1','1','0','0'],
+    ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0','0','0','0','0','0','0','0','0','E','0','0'],
+
+
+]
+
+all_possible_mazes = [
+    maze_7x7_1, 
+    maze_7x7_2, 
+    maze_7x7_3,
+    maze_9x9_1, 
+    maze_9x9_2, 
+    maze_9x9_3,
+    maze_11x11_1,
+    maze_11x11_2,
+    maze_11x11_3,
+    maze_25x25_1
+]
+# (Aquí podrías pegar los otros, ej: maze_7x7_1, maze_11x11_3, etc.)
+
+# --- ¡NUEVO! Definir el tamaño de celda aquí ---
+CELL_SIZE = 30 # ¡Ahora esta es la fuente de verdad!
+
+# 2. Elige qué laberinto quieres ejecutar
+CHOSEN_MAZE_GRID = maze_25x25_1
+FPS = 5 
 
 # --- Inicialización ---
-pygame.init()
+# --- Inicialización ---
+pygame.init() 
 
-# --- Crear Objetos ---
-# 1. Crear el laberinto primero
-maze = Maze(MAZE_SIZE) 
+# --- Encontrar el punto de inicio (sin cambios) ---
+start_row = 0
+start_col = -1 
+for c_index, cell_value in enumerate(CHOSEN_MAZE_GRID[start_row]):
+    if cell_value == '1':
+        start_col = c_index
+        break
+# ... (código de error si start_col == -1) ...
 
-# 2. La TM empieza en (0,0)
-bug_tm = TuringMachine(maze, start_row=0, start_col=0)
+# --- Configuración de la Ventana ---
+# ¡MODIFICADO! El tamaño 'n' viene de la cuadrícula, 'CELL_SIZE' de nuestra constante
+WINDOW_N = len(CHOSEN_MAZE_GRID) 
+WINDOW_SIZE = WINDOW_N * CELL_SIZE 
 
-# --- Configuración de la Ventana (basado en el laberinto) ---
-# Leemos el cell_size y el 'n' final del objeto laberinto
-# (n podría haber cambiado si MAZE_SIZE era par)
-CELL_SIZE = maze.cell_size 
-WINDOW_SIZE = maze.n * CELL_SIZE 
-
-screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
-pygame.display.set_caption("Simulador de Máquina de Turing en Laberinto")
+screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE)) 
+pygame.display.set_caption("Simulador de Máquina de Turing")
 clock = pygame.time.Clock()
 
+# --- Carga de Sprites (¡sección ampliada!) ---
 
-# --- Bucle Principal ---
+# 1. Cargar Sprites del "Bichito"
+loaded_bug_images = {}
+bug_image_paths = {
+    1: "14.png", # Derecha
+    2: "1.png",  # Abajo
+    3: "12.png"  # Izquierda
+}
+print("\nCargando sprites del personaje...")
+for direction_key, path in bug_image_paths.items():
+    try:
+        original_image = pygame.image.load(path).convert_alpha()
+        loaded_bug_images[direction_key] = pygame.transform.scale(original_image, (CELL_SIZE, CELL_SIZE))
+        print(f" - '{path}' (Bichito) cargado.")
+    except Exception as e:
+        print(f" - ¡ERROR cargando '{path}': {e}")
+        loaded_bug_images[direction_key] = None
+
+# 2. ¡NUEVO! Cargar Sprites de los Tiles del Laberinto
+loaded_tile_images = {}
+tile_image_paths = {
+    '0': "pared.png",     # Paredes
+    '1': "callejon3.png",    # Pasillo
+    'V': "callejon3.png"   # Pasillo visitado
+    #'E': "callejon3.png",     # Salida
+}
+print("\nCargando sprites del nivel...")
+for char_key, path in tile_image_paths.items():
+    try:
+        original_image = pygame.image.load(path).convert_alpha()
+        loaded_tile_images[char_key] = pygame.transform.scale(original_image, (CELL_SIZE, CELL_SIZE))
+        print(f" - '{path}' (Nivel) cargado.")
+    except Exception as e:
+        print(f" - ¡ERROR cargando '{path}': {e}")
+        loaded_tile_images[char_key] = None
+print("Carga de sprites finalizada.\n")
+
+
+# --- Crear Objetos ---
+
+# ¡MODIFICADO! Pasamos el cell_size y los tile_images al Maze
+maze = Maze(static_grid=CHOSEN_MAZE_GRID,
+            cell_size=CELL_SIZE,
+            tile_images=loaded_tile_images) 
+
+# Pasamos las imágenes del bichito a la TM (como antes)
+bug_tm = TuringMachine(maze, 
+                       start_row=start_row, 
+                       start_col=start_col, 
+                       bug_images=loaded_bug_images)
+
+# ¡ELIMINADO! Ya no necesitamos esta línea:
+# CELL_SIZE = maze.cell_size 
+
+
+# --- Bucle Principal (¡ORDEN CORREGIDO!) ---
 running = True
 while running:
-    # 1. Manejo de Eventos
+    # 1. Manejo de Eventos (Esto siempre va primero)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # 2. Lógica (Actualizar el estado de la TM)
-    # Ejecutamos varios pasos por fotograma para acelerar
-    # (puedes ajustar el 'range' o ponerlo en 1 para ir paso a paso)
-    for _ in range(1): # Cambia el 1 para acelerar la simulación
+    # --- ¡ESTE ES EL CAMBIO! ---
+    
+    # 2. DIBUJO (Renderizado)
+    # Dibuja el estado ACTUAL, tal como estaba al final del frame anterior.
+    screen.fill((255, 255, 255)) 
+    maze.draw(screen, pygame) # Dibuja el piso ('1')
+    bug_tm.draw_bug(screen, pygame, maze.cell_size) # Dibuja el bicho encima del piso
+
+    # 3. LÓGICA (Actualizar el estado)
+    # AHORA, calcula el PRÓXIMO movimiento.
+    # En este paso, el piso se cambiará a 'V' y el bicho se moverá.
+    for _ in range(1): 
         if not bug_tm.halted:
             bug_tm.step()
-
-    # 3. Dibujo (Renderizado)
-    screen.fill((255, 255, 255)) # Fondo blanco
     
-    # Dibuja el estado actual del laberinto (paredes, visitados, etc.)
-    maze.draw(screen, pygame)
-    
-    # Dibuja la posición actual del "bichito"
-    bug_tm.draw_bug(screen, pygame, maze.cell_size)
-
-    # 4. Actualizar Pantalla
+    # 4. Actualizar Pantalla (Esto siempre va al final)
+    # Muestra en pantalla el dibujo que preparamos en el paso 2.
     pygame.display.flip()
     
-    # 5. Controlar FPS (velocidad de la simulación)
+    # 5. Controlar FPS
     clock.tick(FPS)
 
 pygame.quit()
