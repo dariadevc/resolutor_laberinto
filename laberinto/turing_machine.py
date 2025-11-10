@@ -1,9 +1,5 @@
-# En turing_machine.py
-
-import pygame
-
 class TuringMachine:
-    # ¡MODIFICADO! Ahora el __init__ recibe un diccionario de imágenes
+    # __init__ recibe un diccionario de imágenes
     def __init__(self, maze, start_row, start_col, bug_images): 
         self.maze = maze            
         self.row = start_row        
@@ -15,14 +11,11 @@ class TuringMachine:
         self.dr = [-1, 0, 1, 0]
         self.dc = [0, 1, 0, -1]
 
-        # --- ¡MUY MODIFICADO! ---
-        # Ya no cargamos imágenes aquí. 
         # Simplemente asignamos las que recibimos de main.py
         self.bug_images = bug_images 
 
     def step(self):
-        # ... (Tu lógica del método step sigue igual) ...
-        # (No es necesario pegarla de nuevo, la tuya funciona)
+
         if self.halted:
             return
 
@@ -51,7 +44,7 @@ class TuringMachine:
                 self.direction = (self.direction - 1) % 4
 
 
-    # --- ¡MODIFICADO! Para manejar tus 3 imágenes ---
+    # Manejo de imagenes
     def draw_bug(self, screen, pygame_instance, cell_size):
         """ 
         Dibuja el "bichito" en la pantalla.
@@ -63,7 +56,7 @@ class TuringMachine:
         # 1. Intentar obtener la imagen de la dirección actual
         current_bug_image = self.bug_images.get(self.direction)
         
-        # 2. ¡NUEVO! Si no existe (ej. dirección 0)
+        # 2. Si no existe (ej. dirección 0)
         if current_bug_image is None:
             # Usar la imagen de "Abajo" (key 2) como default
             current_bug_image = self.bug_images.get(2) 

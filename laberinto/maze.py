@@ -1,9 +1,5 @@
-# En tu archivo maze.py
-
-import pygame # Asegúrate de que pygame esté importado
-
 class Maze:
-    # ¡MODIFICADO! __init__ ahora recibe el cell_size y las imágenes
+    
     def __init__(self, static_grid, cell_size, tile_images):
         
         # 1. Copiamos la cuadrícula estática
@@ -12,7 +8,7 @@ class Maze:
         # 2. Obtenemos el tamaño 'n' desde la cuadrícula
         self.n = len(self.grid) 
         
-        # 3. ¡MODIFICADO! Guardamos el cell_size y las imágenes
+        # 3. Guardamos el cell_size y las imágenes
         self.cell_size = cell_size
         self.tile_images = tile_images # Este es el diccionario de imágenes
 
@@ -25,12 +21,11 @@ class Maze:
         if 0 <= row < self.n and 0 <= col < self.n:
             self.grid[row][col] = value
 
-    # --- ¡MUY MODIFICADO! Este es el cambio principal ---
+
     def draw(self, screen, pygame_instance):
         """
         Dibuja el laberinto usando sprites (imágenes) en lugar de colores.
         """
-        # Ya no necesitamos el diccionario 'colors'
         
         for r in range(self.n):
             for c in range(self.n):

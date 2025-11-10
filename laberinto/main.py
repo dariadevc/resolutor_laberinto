@@ -1,13 +1,10 @@
 import pygame
 import random
-# Asegúrate de que 'maze.py' tenga la clase Maze que acepta 'static_grid'
 from maze import Maze 
 from turing_machine import TuringMachine
 
-# --- Configuración ---
-
-# 1. Define o importa tus laberintos estáticos aquí
-# 7x7 - Laberinto 1 (Camino simple en S)
+# 1. Definición de los laberintos estáticos
+# 7x7 - Laberinto 1 
 maze_7x7_1 = [
     ['0', '1', '0', '0', '0', '0', '0'],
     ['0', '1', '0', '0', '0', '0', '0'],
@@ -166,30 +163,29 @@ all_possible_mazes = [
     maze_11x11_3,
     maze_25x25_1
 ]
-# (Aquí podrías pegar los otros, ej: maze_7x7_1, maze_11x11_3, etc.)
 
-# --- ¡NUEVO! Definir el tamaño de celda aquí ---
-CELL_SIZE = 30 # ¡Ahora esta es la fuente de verdad!
+# --- Definir el tamaño de celda---
+CELL_SIZE = 30 
 
 # 2. Elige qué laberinto quieres ejecutar
-CHOSEN_MAZE_GRID = maze_25x25_1
+CHOSEN_MAZE_GRID = random.choice(all_possible_mazes)
+#CHOSEN_MAZE_GRID = maze_25x25_1
 FPS = 5 
 
 # --- Inicialización ---
-# --- Inicialización ---
 pygame.init() 
 
-# --- Encontrar el punto de inicio (sin cambios) ---
+# --- Encontrar el punto de inicio---
 start_row = 0
 start_col = -1 
 for c_index, cell_value in enumerate(CHOSEN_MAZE_GRID[start_row]):
     if cell_value == '1':
         start_col = c_index
         break
-# ... (código de error si start_col == -1) ...
+
 
 # --- Configuración de la Ventana ---
-# ¡MODIFICADO! El tamaño 'n' viene de la cuadrícula, 'CELL_SIZE' de nuestra constante
+# El tamaño 'n' viene de la cuadrícula, 'CELL_SIZE'
 WINDOW_N = len(CHOSEN_MAZE_GRID) 
 WINDOW_SIZE = WINDOW_N * CELL_SIZE 
 
@@ -197,7 +193,7 @@ screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
 pygame.display.set_caption("Simulador de Máquina de Turing")
 clock = pygame.time.Clock()
 
-# --- Carga de Sprites (¡sección ampliada!) ---
+# --- Carga de Sprites---
 
 # 1. Cargar Sprites del "Bichito"
 loaded_bug_images = {}
@@ -216,7 +212,7 @@ for direction_key, path in bug_image_paths.items():
         print(f" - ¡ERROR cargando '{path}': {e}")
         loaded_bug_images[direction_key] = None
 
-# 2. ¡NUEVO! Cargar Sprites de los Tiles del Laberinto
+# 2. Cargar Sprites del laberinto
 loaded_tile_images = {}
 tile_image_paths = {
     '0': "pared.png",     # Paredes
@@ -238,7 +234,7 @@ print("Carga de sprites finalizada.\n")
 
 # --- Crear Objetos ---
 
-# ¡MODIFICADO! Pasamos el cell_size y los tile_images al Maze
+# Pasamos el cell_size y los tile_images al Maze
 maze = Maze(static_grid=CHOSEN_MAZE_GRID,
             cell_size=CELL_SIZE,
             tile_images=loaded_tile_images) 
@@ -249,20 +245,14 @@ bug_tm = TuringMachine(maze,
                        start_col=start_col, 
                        bug_images=loaded_bug_images)
 
-# ¡ELIMINADO! Ya no necesitamos esta línea:
-# CELL_SIZE = maze.cell_size 
-
-
-# --- Bucle Principal (¡ORDEN CORREGIDO!) ---
+# --- Bucle Principal ---
 running = True
 while running:
-    # 1. Manejo de Eventos (Esto siempre va primero)
+    # 1. Manejo de Eventos
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # --- ¡ESTE ES EL CAMBIO! ---
-    
     # 2. DIBUJO (Renderizado)
     # Dibuja el estado ACTUAL, tal como estaba al final del frame anterior.
     screen.fill((255, 255, 255)) 
@@ -277,7 +267,6 @@ while running:
             bug_tm.step()
     
     # 4. Actualizar Pantalla (Esto siempre va al final)
-    # Muestra en pantalla el dibujo que preparamos en el paso 2.
     pygame.display.flip()
     
     # 5. Controlar FPS
