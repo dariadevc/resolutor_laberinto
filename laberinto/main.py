@@ -221,8 +221,8 @@ loaded_tile_images = {}
 tile_image_paths = {
     '0': "pared.png",     # Paredes
     '1': "piso.png",    # Pasillo
-    'V': "piso.png"   # Pasillo visitado
-    #'E': "callejon3.png",     # Salida
+    'V': "piso.png",   # Pasillo visitado
+    'E': "llave.jpg"    # Salida
 }
 print("\nCargando sprites del nivel...")
 for char_key, path in tile_image_paths.items():
