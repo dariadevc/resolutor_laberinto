@@ -42,25 +42,24 @@ class MaquinaTuring:
 
     def get_cadena_salida(self):
 
-        matriz_camino = self.camino.grid
+        matriz_camino = [fila.copy() for fila in self.camino.grid]
 
         matriz_salida = [fila.copy() for fila in matriz_camino]
+
+        for fila in range(len(matriz_camino)):
+            for col in range(len(matriz_camino[0])):
+                if matriz_camino[fila][col] == 'E':
+                    matriz_camino[fila][col] = '0'
 
         fila_actual = 0
         columna_actual = -1
         for i, celda in enumerate(matriz_camino[0]):
-            if celda in ['0', 'E']:
+            if celda == '0':
                 columna_actual = i
                 break
         
         if columna_actual == -1:
             return "No se encontró entrada"
-        
-        fila_salida = len(matriz_camino) - 1
-        columna_salida = -1
-        for i, celda in enumerate(matriz_camino[-1]):
-            if celda in ['0', 'E']:
-                columna_salida = i
         
         direccion_actual = 2  # Empezamos mirando hacia abajo
         dr = [-1, 0, 1, 0]    # Arriba, Derecha, Abajo, Izquierda
@@ -76,7 +75,12 @@ class MaquinaTuring:
         pasos = 0
         max_pasos = len(matriz_camino) * len(matriz_camino[0]) * 2
         
-        while (fila_actual != fila_salida or columna_actual != columna_salida) and pasos < max_pasos:
+        while pasos < max_pasos:
+            if fila_actual == len(matriz_camino) - 1:
+                if matriz_camino[fila_actual][columna_actual] == '0':
+                    matriz_salida[fila_actual][columna_actual] = mapa_direcciones.get(direccion_actual, 'A')
+                break
+
             direccion_actual = (direccion_actual + 1) % 4
             
             movimiento_encontrado = False
@@ -88,7 +92,7 @@ class MaquinaTuring:
                     0 <= siguiente_columna < len(matriz_camino[0]) and
                     matriz_camino[siguiente_fila][siguiente_columna] != '1'):
                     
-                    if not (fila_actual == fila_salida and columna_actual == columna_salida):
+                    if not (fila_actual == 0 and columna_actual == columna_actual):
                         if matriz_camino[fila_actual][columna_actual] == '0':
                             matriz_salida[fila_actual][columna_actual] = mapa_direcciones[direccion_actual]
                     
