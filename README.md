@@ -12,6 +12,11 @@ Desde la terminal se pueden observar tanto la cadena de entrada como la de salid
 Se debe instalar la librería pygame (https://www.pygame.org/news) con el siguiente comando desde la terminal:
 `pip install pygame`
 
+## Versiones
+
+- python 3.10.12
+- pygame 2.6.1
+
 ## Autores
 
 - Daria Sauco

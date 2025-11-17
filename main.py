@@ -10,7 +10,7 @@ CAMINO = '0'
 VISITADO = 'V'
 SALIDA = 'E'
 TAMANIO_CELDA = 40
-FPS = 7
+FPS = 6
 
 # Laberintos estáticos
 # ========== LABERINTOS 7x7 ==========
@@ -524,39 +524,3 @@ while ejecutando:
     reloj.tick(FPS)
 
 pygame.quit()
-
-
-# #referencia
-# 0 = "camino.png"
-
-# #izquierda
-# ESI = "1.1-esquina_sup_izq.png"
-# CIZ = "2.1-costado_izq.png"
-# EII = "3.1-esquina_inf_izq.png"
-
-# #centro
-# CS = "1.2-centro_sup.png"
-# CE = "2.2-centro.png"
-# CI = "3.2-centro_inf.png"
-
-# #derecha
-# ESD = "1.3-esquina_sup_der.png"
-# CD = "2.3-costado_der.png"
-# EID = "3.3-esquina_inf_der.png"
-
-# #paredes
-# PEI = "4.1-pared_esquina_izq.png"
-# PC = "4.2-pared_centro.png"
-# PED = "4.3-pared_esquina_der.png"
-
-# maze_9x9_2 = [
-#     ['CE', 'CE', 'CE', 'CD', '0', 'CIZ', 'CE', 'CE', 'CE'],
-#     ['CD', 'PC', 'PC', 'PED', '0', 'CIZ', 'CE', 'CE', 'CE'],
-#     ['CD', '0', '0', '0', '0', 'CIZ', 'CE', 'CE', 'CE'],
-#     ['CD', '0', 'ESI', 'CS', 'CS', 'CE', 'CE', 'CE', 'CE'],
-#     ['CD', '0', 'EII', 'CI', 'CI', 'CI', 'CI', 'CI', 'CE'],
-#     ['CD', '0', 'PEI', 'PC', 'PC', 'PC', 'PC', 'PC', 'CIZ'],
-#     ['CD', '0', '0', '0', '0', '0', '0', '0', 'CIZ'],
-#     ['CE', 'CS', 'CS', 'CS', 'CS', 'CS', 'ESD', '0', 'CIZ'],
-#     ['CI', 'CI', 'CI', 'CI', 'CI', 'CI', 'EID', '0', 'EII'] #necesito que reconozca la salida solo porque llegó a la última fila
-# ]
