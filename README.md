@@ -1,4 +1,4 @@
-#Recorredor de caminos
+# Recorredor de caminos
 
 Simulación de una Máquina de Turing. Permite mostrar el recorrido que se obtiene a partir de la misma.
 

@@ -56,10 +56,8 @@ class MaquinaTuring:
         for i, celda in enumerate(matriz_camino[0]):
             if celda == '0':
                 columna_actual = i
+                matriz_salida[0][columna_actual] = 'A'
                 break
-        
-        if columna_actual == -1:
-            return "No se encontró entrada"
         
         direccion_actual = 2  # Empezamos mirando hacia abajo
         dr = [-1, 0, 1, 0]    # Arriba, Derecha, Abajo, Izquierda
@@ -74,6 +72,7 @@ class MaquinaTuring:
         
         pasos = 0
         max_pasos = len(matriz_camino) * len(matriz_camino[0]) * 2
+        primer_paso = True
         
         while pasos < max_pasos:
             if fila_actual == len(matriz_camino) - 1:
